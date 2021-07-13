@@ -16,7 +16,7 @@ kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/env/platform
 
 You should see the Kubeflow pods starting.
 
-`kubectl get pods`{{execute}}
+`kubectl get all -n kubeflow`{{execute}}
 
 ## Create Persistent Volume and Services for Katacoda
 To ensure Kubeflow runs successfully on Katacoda, deploy the following extensions.
