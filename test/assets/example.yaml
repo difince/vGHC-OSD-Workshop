@@ -1,0 +1,30 @@
+apiVersion: "kubeflow.org/v1alpha2"
+kind: "TFJob"
+metadata:
+  name: "example-job"
+spec:
+  tfReplicaSpecs:
+    Master:
+      replicas: 1
+      restartPolicy: Never
+      template:
+        spec:
+          containers:
+            - name: tensorflow
+              image: gcr.io/tf-on-k8s-dogfood/tf_sample:dc944ff
+    Worker:
+      replicas: 1
+      restartPolicy: Never
+      template:
+        spec:
+          containers:
+            - name: tensorflow
+              image: gcr.io/tf-on-k8s-dogfood/tf_sample:dc944ff
+    PS:
+      replicas: 2
+      restartPolicy: Never
+      template:
+        spec:
+          containers:
+            - name: tensorflow
+              image: gcr.io/tf-on-k8s-dogfood/tf_sample:dc944ff

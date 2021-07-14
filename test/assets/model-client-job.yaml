@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: model-client-job-katacoda
+spec:
+  template:
+    metadata:
+      name: model-client-job-katacoda
+    spec:
+      containers:
+      - name: model-client-job-katacoda
+        image: katacoda/tensorflow_serving
+        imagePullPolicy: Never
+        command:
+        - /bin/bash
+        - -c
+        args:
+        - /serving/bazel-bin/tensorflow_serving/example/inception_client
+          --server=inception:9000 --image=/data/katacoda.jpg
+        volumeMounts:
+        - name: inception-persistent-storage-katacoda
+          mountPath: /data
+      volumes:
+      - name: inception-persistent-storage-katacoda
+        hostPath:
+          path: /root
+      restartPolicy: Never
