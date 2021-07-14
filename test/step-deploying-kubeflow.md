@@ -26,7 +26,7 @@ You should see the Kubeflow pods starting.
 `kubectl get pods`{{execute}}
 
 Verify that the Kubeflow Pipelines UI is accessible by port-forwarding:
-`kubectl port-forward --address 0.0.0.0 -n kubeflow svc/ml-pipeline-ui 8080:80"
+`kubectl port-forward --address 0.0.0.0 -n kubeflow svc/ml-pipeline-ui 8080:80
 `{{execute}}
 
 ## Create Persistent Volume and Services for Katacoda
