@@ -3,7 +3,6 @@
   "description": "Learn how to deploy Kubeflow to a Kubernetes cluster",
   "details": {
     "steps": [
-      { "title": "What is Kubeflow?", "text": "step-whatiskubeflow.md" },
       { "title": "Deploying Kubeflow", "text": "step-deploying-kubeflow.md" }
     ],
     "intro": {
