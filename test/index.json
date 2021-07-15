@@ -4,25 +4,18 @@
   "details": {
     "steps": [
       { "title": "What is Kubeflow?", "text": "step-whatiskubeflow.md" },
-      { "title": "Deploying Kubeflow", "text": "step-deploying-kubeflow.md" },
-      { "title": "Example TensorFlow Application", "text": "step-example-tfjob.md" },
-      { "title": "Deploy TensorFlow Job (TFJob)", "text": "step-deploying-tfjob.md" },
-      { "title": "View Job Progress and Results", "text": "step-viewing-tfjob.md" },
-      { "title": "Deploy JupyterHub", "text": "jupyter.md" },
-      { "title": "Access Model Server", "text": "model.md" }
+      { "title": "Deploying Kubeflow", "text": "step-deploying-kubeflow.md" }
     ],
     "intro": {
       "text": "intro.md",
-      "code": "foreground-init.sh",
-      "courseData": "env-init.sh"
+      "code": "foreground-init.sh"
     },
     "finish": {
       "text": "finish.md"
     },
     "assets": {
       "host01": [
-        {"file": "example.yaml", "target": "/root"},
-        {"file": "model-client-job.yaml", "target": "/root"}
+
       ]
     }
   },
