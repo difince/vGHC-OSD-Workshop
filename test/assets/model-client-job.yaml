@@ -16,7 +16,7 @@ spec:
         - -c
         args:
         - /serving/bazel-bin/tensorflow_serving/example/inception_client
-          --server=inception:9000 --image=/data/katacoda.jpg
+          --server=inception:9000
         volumeMounts:
         - name: inception-persistent-storage-katacoda
           mountPath: /data
