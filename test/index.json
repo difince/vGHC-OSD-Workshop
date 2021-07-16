@@ -24,7 +24,7 @@
     "dashboards": [{"name": "Jupyterhub", "port": 80}, {"name": "Dashboard", "port": 8080}]
   },
   "backend": {
-    "imageid": "atanasovad\n/\nml-pipeline-ui-didi",
+    "imageid": "atanasovad/ml-pipeline-ui-didi",
     "port": 80
   }
 }
