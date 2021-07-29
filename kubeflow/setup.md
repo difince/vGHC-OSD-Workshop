@@ -7,10 +7,121 @@ system to get Kubeflow up and running before joining the vGHC OSD workshop
 **An Illustrated Guide to MLOps using Kubeflow** on October 1st 2021.
 
 - [Linux]()
-    - [Ubuntu]()
+    - [Ubuntu](#ubuntu)
     - [Fedora]()
 - [MacOS](#macos)
 - [Windows]()
+
+##Ubuntu
+1. **Install Kustomize**
+
+   To install [Kustomize](https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0) version 3.2.0
+     first download `kustomize_3.2.0_linux_amd64` by executing:
+   ```
+   wget https://github.com/kubernetes-sigs/kustomize/releases/download/v3.2.0/kustomize_3.2.0_linux_amd64
+   ```
+   Run the following to make `kustomize` executable and move it:
+   
+    ```
+    chmod +x kustomize_3.2.0_linux_amd64 && sudo mv kustomize_3.2.0_darwin_amd64 /usr/local/bin/kustomize
+    ```
+
+2. **Install kubectl**
+
+   Download the latest release with the command:
+   ```
+   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+   ```
+   Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux)
+   ```
+   sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+   ```
+   Once installed, run the following command to validate successful installation
+   ```
+   kubectl version
+   ```
+   
+   Output should look similar to below.
+   ```
+   Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"x.xx.x", GitCommit:"xxxxx", GitTreeState:"clean", BuildDate:"xxxx-xx-xxTxx:xx:xxx", GoVersion:"gx.xx.x", Compiler:"gc", Platform:"linux/amd64"}
+   ```
+
+3. **Install Kubernetes locally.** </br>
+   Choose one of the following options to install it:
+   - <details>
+      <summary>Kind</summary>
+     
+      [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/) lets you run Kubernetes on your local computer. This tool requires that you have [Docker](https://docs.docker.com/get-docker/) installed and configured.
+     ```
+      curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+      chmod +x ./kind && mv ./kind /usr/local/bin/kind
+     ```
+      Start Kubernetes Cluster
+      ```
+      kind create cluster
+     ```
+     Successful creation of kind cluster should result in the following output:
+     ```
+     Creating cluster "kind" ...
+     ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+     ✓ Preparing nodes 📦  
+     ✓ Writing configuration 📜
+     ✓ Starting control-plane 🕹️
+     ✓ Installing CNI 🔌
+     ✓ Installing StorageClass 💾
+     Set kubectl context to "kind-kind"
+     
+     You can now use your cluster with: 
+     kubectl cluster-info --context kind-kind
+     
+     Thanks for using kind! 😊
+      ```
+   </details>
+
+   - <details>
+      <summary>minikube</summary>
+     
+     Prerequisites: Container or virtual machine manager, such as: Docker, Hyperkit, Hyper-V, KVM, Parallels, Podman, VirtualBox, or VMWare.
+     
+     To install the latest version of [minikube](https://minikube.sigs.k8s.io/docs/start/) execute:  
+      ```
+     curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+     sudo install minikube-linux-amd64 /usr/local/bin/minikube
+     ```
+     Start Kubernetes Cluster
+      ```
+      minikube start --cpus 8 --memory 16000 --disk-size=128g
+      ```
+      Successful creation of minikube cluster should result in the following output:
+      ```
+      😄  minikube v1.22.0 on Ubuntu 20.04
+      ✨  Automatically selected the docker driver. Other choices: kvm2, ssh
+      ❗  Your cgroup does not allow setting memory.
+      ▪ More information: https://docs.docker.com/engine/install/linux-postinstall/#your-kernel-does-not-support-cgroup-swap-limit-capabilities
+      👍  Starting control plane node minikube in cluster minikube
+      🚜  Pulling base image ...
+      🔥  Creating docker container (CPUs=8, Memory=16000MB) ...
+      🐳  Preparing Kubernetes v1.21.2 on Docker 20.10.7 ...
+      ▪ Generating certificates and keys ...
+      ▪ Booting up control plane ...
+      ▪ Configuring RBAC rules ...
+      🔎  Verifying Kubernetes components...
+      ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+      🌟  Enabled addons: storage-provisioner, default-storageclass
+      🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+      ```
+      1. Validate connection to Kubernetes cluster by running a `kubectl` command
+      ```
+      kubectl get nodes
+      
+      NAME       STATUS   ROLES                  AGE   VERSION
+      minikube   Ready    control-plane,master   18s   v1.21.2
+      ```
+
+    </details>
+
+4. [Install Kubeflow](#install-kubeflow)
+5. [Clean up](#clean-up)
 
 ## MacOS
 
@@ -39,28 +150,7 @@ system to get Kubeflow up and running before joining the vGHC OSD workshop
     - [Docker Desktop for Mac](#docker-desktop-for-mac)
     - [Minikube]()
 1. [Install Kubeflow](#install-kubeflow)
-1. Clean up
-    - Run the following command to uninstall Kubeflow
-    ```
-    cd ~/workspace/manifests;
-    kustomize build example | kubectl delete -f -;
-    ```
-   Validate the resource deletion by running `kubectl get pod --all-namespaces`
-
-    - To stop running Kubernetes follow the instructions for each options
-        - kind
-            - Run the following to delete the cluster
-            ```
-            kind delete cluster
-            ```
-        - Docker Desktop for Mac
-            - Navigate to Docker for Mac preferences -> kubernetes to disable Kubernetes
-        - Minikube
-            - Run the following to stop and delete the cluster
-            ```
-            minikube stop
-            minikube delete --all
-            ```
+1. [Clean up](#clean-up)
 
 ### kind
 
@@ -152,13 +242,13 @@ system to get Kubeflow up and running before joining the vGHC OSD workshop
    ```
 
 ## Install Kubeflow
-
+The installation process for Kubeflow is the same for all environments.
 1. Create a directory `workspace` and clone the `kubeflow/manifest` repo.
     ```
     mkdir -p ~/workspace && cd ~/workspace;
     git clone https://github.com/kubeflow/manifests.git && cd manifests;
     ```
-1. Modify `manifests/ommon/dex/base/deployment.yaml` file to include the following as a workaround for current problem
+1. Modify `manifests/common/dex/base/deployment.yaml` file to include the following as a workaround for current problem
    with [1.21 Kubernetes cluster and Dex](https://github.com/dexidp/dex/issues/2082). This should not be necessary
    when [workaround](https://github.com/kubeflow/manifests/pull/1883)
    PR merges.
@@ -170,7 +260,7 @@ system to get Kubeflow up and running before joining the vGHC OSD workshop
           fieldPath: metadata.namespace
     ```
 
-   The content of the `~/workspace/manifests/ommon/dex/base/deployment.yaml` file should match the content below.
+   The content of the `~/workspace/manifests/common/dex/base/deployment.yaml` file should match the content below.
     <details>
         <summary>Dex Deployment File Content</summary>
 
@@ -319,3 +409,26 @@ system to get Kubeflow up and running before joining the vGHC OSD workshop
     - password: `12341234`
 
    Once successfully logged in, Kubeflow Dashboard should be available for use.
+
+### Clean up
+ - Run the following command to uninstall Kubeflow
+ ```
+ cd ~/workspace/manifests;
+ kustomize build example | kubectl delete -f -;
+ ```
+Validate the resource deletion by running `kubectl get pod --all-namespaces`
+
+ - To stop running Kubernetes follow the instructions for each options
+     - kind
+         - Run the following to delete the cluster
+         ```
+         kind delete cluster
+         ```
+     - Docker Desktop for Mac
+         - Navigate to Docker for Mac preferences -> kubernetes to disable Kubernetes
+     - Minikube
+         - Run the following to stop and delete the cluster
+         ```
+         minikube stop
+         minikube delete --all
+         ```
