@@ -1,248 +1,428 @@
 # Setup Guide
 
-This is a setup guide to install Kubeflow on local machine. To install [Kubeflow](https://www.kubeflow.org/),
-both [Kubernetes](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/)
-and [Kustomize version 3.2.0](https://kustomize.io/) are required. Follow the instructions based on local operating
-system to get Kubeflow up and running before joining the vGHC OSD workshop
-**An Illustrated Guide to MLOps using Kubeflow** on October 1st 2021.
+This is a setup guide to install Kubeflow on a local machine. Follow the instructions based on local operating 
+ system to get Kubeflow up and running before joining the vGHC OSD workshop **An Illustrated Guide to MLOps using Kubeflow**
+ on October 1st 2021.
 
-- [Linux]()
+- [Linux](#linux)
     - [Ubuntu](#ubuntu)
-    - [Fedora]()
 - [MacOS](#macos)
-- [Windows]()
+- [Windows](#windows)
 
-##Ubuntu
-1. **Install Kustomize**
+## Linux
 
-   To install [Kustomize](https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0) version 3.2.0
-     first download `kustomize_3.2.0_linux_amd64` by executing:
-   ```
-   wget https://github.com/kubernetes-sigs/kustomize/releases/download/v3.2.0/kustomize_3.2.0_linux_amd64
-   ```
-   Run the following to make `kustomize` executable and move it:
+### Ubuntu
+
+1. **Install Docker**
    
-    ```
-    chmod +x kustomize_3.2.0_linux_amd64 && sudo mv kustomize_3.2.0_darwin_amd64 /usr/local/bin/kustomize
-    ```
-
-2. **Install kubectl**
-
-   Download the latest release with the command:
-   ```
-   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-   ```
-   Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux)
-   ```
-   sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-   ```
-   Once installed, run the following command to validate successful installation
-   ```
-   kubectl version
-   ```
+   [Docker](https://www.docker.com/) is an open platform for developing, shipping, and running applications.
    
-   Output should look similar to below.
-   ```
-   Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"x.xx.x", GitCommit:"xxxxx", GitTreeState:"clean", BuildDate:"xxxx-xx-xxTxx:xx:xxx", GoVersion:"gx.xx.x", Compiler:"gc", Platform:"linux/amd64"}
-   ```
-
-3. **Install Kubernetes locally.** </br>
-   Choose one of the following options to install it:
-   - <details>
-      <summary>Kind</summary>
-     
-      [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/) lets you run Kubernetes on your local computer. This tool requires that you have [Docker](https://docs.docker.com/get-docker/) installed and configured.
-     ```
-      curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
-      chmod +x ./kind && mv ./kind /usr/local/bin/kind
-     ```
-      Start Kubernetes Cluster
-      ```
-      kind create cluster
-     ```
-     Successful creation of kind cluster should result in the following output:
-     ```
-     Creating cluster "kind" ...
-     ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
-     ✓ Preparing nodes 📦  
-     ✓ Writing configuration 📜
-     ✓ Starting control-plane 🕹️
-     ✓ Installing CNI 🔌
-     ✓ Installing StorageClass 💾
-     Set kubectl context to "kind-kind"
-     
-     You can now use your cluster with: 
-     kubectl cluster-info --context kind-kind
-     
-     Thanks for using kind! 😊
-      ```
-   </details>
-
-   - <details>
-      <summary>minikube</summary>
-     
-     Prerequisites: Container or virtual machine manager, such as: Docker, Hyperkit, Hyper-V, KVM, Parallels, Podman, VirtualBox, or VMWare.
-     
-     To install the latest version of [minikube](https://minikube.sigs.k8s.io/docs/start/) execute:  
-      ```
-     curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-     sudo install minikube-linux-amd64 /usr/local/bin/minikube
-     ```
-     Start Kubernetes Cluster
-      ```
-      minikube start --cpus 8 --memory 16000 --disk-size=128g
-      ```
-      Successful creation of minikube cluster should result in the following output:
-      ```
-      😄  minikube v1.22.0 on Ubuntu 20.04
-      ✨  Automatically selected the docker driver. Other choices: kvm2, ssh
-      ❗  Your cgroup does not allow setting memory.
-      ▪ More information: https://docs.docker.com/engine/install/linux-postinstall/#your-kernel-does-not-support-cgroup-swap-limit-capabilities
-      👍  Starting control plane node minikube in cluster minikube
-      🚜  Pulling base image ...
-      🔥  Creating docker container (CPUs=8, Memory=16000MB) ...
-      🐳  Preparing Kubernetes v1.21.2 on Docker 20.10.7 ...
-      ▪ Generating certificates and keys ...
-      ▪ Booting up control plane ...
-      ▪ Configuring RBAC rules ...
-      🔎  Verifying Kubernetes components...
-      ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
-      🌟  Enabled addons: storage-provisioner, default-storageclass
-      🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
-      ```
-      1. Validate connection to Kubernetes cluster by running a `kubectl` command
-      ```
-      kubectl get nodes
+    - <details>
+         <summary>Install using the Docker repository</summary>
       
-      NAME       STATUS   ROLES                  AGE   VERSION
-      minikube   Ready    control-plane,master   18s   v1.21.2
+         Follow the [official instruction from Docker](https://docs.docker.com/engine/install/ubuntu/) to verify prerequisites.
+         Then, following the [steps outlined in the documentation](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+         to install docker using the repository.
+
+         - Validate successful installation by running `docker`. Output should look similar to below.
+            ```
+            Usage:  docker [OPTIONS] COMMAND
+
+            A self-sufficient runtime for containers
+            
+            Options:
+                  --config string      Location of client config files (default "/Users/antheaj/.docker")
+              -c, --context string     Name of the context to use to connect to the daemon (overrides DOCKER_HOST env var and default context set with
+                                       "docker context use")
+              -D, --debug              Enable debug mode
+              -H, --host list          Daemon socket(s) to connect to
+              -l, --log-level string   Set the logging level ("debug"|"info"|"warn"|"error"|"fatal") (default "info")
+                  --tls                Use TLS; implied by --tlsverify
+                  --tlscacert string   Trust certs signed only by this CA (default "/Users/antheaj/.docker/ca.pem")
+                  --tlscert string     Path to TLS certificate file (default "/Users/antheaj/.docker/cert.pem")
+                  --tlskey string      Path to TLS key file (default "/Users/antheaj/.docker/key.pem")
+                  --tlsverify          Use TLS and verify the remote
+              -v, --version            Print version information and quit
+            
+            Run 'docker COMMAND --help' for more information on a command.
+            
+            To get more help with docker, check out our guides at https://docs.docker.com/go/guides/
+           ```
+      </details>
+
+1. **Install Kustomize**
+   
+   [Kustomize](https://kustomize.io/) is a tool for customizing Kubernetes resource configuration free from templates and DSLs.
+
+   To install [Kustomize version 3.2.0](https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0),
+   - Download `kustomize_3.2.0_linux_amd64` by executing the command below
+      ```
+      wget https://github.com/kubernetes-sigs/kustomize/releases/download/v3.2.0/kustomize_3.2.0_linux_amd64
+      ```
+   - Make `kustomize` executable and move it to `/usr/local/bin` directory
+      ```
+      chmod +x kustomize_3.2.0_linux_amd64 && sudo mv kustomize_3.2.0_darwin_amd64 /usr/local/bin/kustomize
+      ```
+   - Validate successful installation by running `kustomize`
+      Output should look similar to below
+      ```
+      Manages declarative configuration of Kubernetes.
+      See https://sigs.k8s.io/kustomize
+      
+      Usage:
+        kustomize [command]
+      
+      Available Commands:
+        build       Print configuration per contents of kustomization.yaml
+        config      Config Kustomize transformers
+        create      Create a new kustomization in the current directory
+        edit        Edits a kustomization file
+        help        Help about any command
+        version     Prints the kustomize version
+      
+      Flags:
+        -h, --help   help for kustomize
+      
+      Use "kustomize [command] --help" for more information about a command.
       ```
 
+1. **Install kubectl**
+
+   [kubectl](https://kubernetes.io/docs/reference/kubectl/overview/) is a Kubernetes command-line tool that
+   allows you to run commands against Kubernetes clusters.
+   
+   To install kubectl,
+   - Download the latest release with the command
+      ```
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      ```
+   - Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux)
+      ```
+      sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      ```
+   - Validate successful installation by running `kubectl version`. Output should look similar to below.
+      ```
+      Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"x.xx.x", GitCommit:"xxxxx", GitTreeState:"clean", BuildDate:"xxxx-xx-xxTxx:xx:xxx", GoVersion:"gx.xx.x", Compiler:"gc", Platform:"linux/amd64"}
+      ```
+
+1. **Install Kubernetes locally** </br>
+   Choose **one** of the following options to install Kubernetes
+    - <details>
+         <summary>Kind</summary>
+
+         [Kind](https://kind.sigs.k8s.io/) is a tool for running local Kubernetes clusters using Docker container “nodes”.
+         
+         1. Download kind
+            ```
+            curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+            chmod +x ./kind && mv ./kind /usr/local/bin/kind
+            ```
+         1. Start Kubernetes Cluster
+            ```
+            kind create cluster
+            ```
+            Successful creation of kind cluster should result in the following output:
+            ```
+            Creating cluster "kind" ...
+            ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+            ✓ Preparing nodes 📦  
+            ✓ Writing configuration 📜
+            ✓ Starting control-plane 🕹️
+            ✓ Installing CNI 🔌
+            ✓ Installing StorageClass 💾
+            Set kubectl context to "kind-kind"
+            
+            You can now use your cluster with: 
+            kubectl cluster-info --context kind-kind
+         
+            Thanks for using kind! 😊
+            ```
+         1. Validate connection to Kubernetes cluster by running a `kubectl` command
+            ```
+            kubectl get nodes
+            
+            NAME                 STATUS   ROLES                  AGE   VERSION
+            kind-control-plane   Ready    control-plane,master   57s   v1.21.1
+            ```
+         </details>
+
+    - <details>
+         <summary>Minikube</summary>
+         
+         [Minikube](https://minikube.sigs.k8s.io/) is a tool for running local Kubernetes clusters using a Hypervisor.
+
+         1. Install [VMware Fusion](https://www.vmware.com/products/fusion.html)
+            or [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+            or other hypervisors.
+
+         1. Download minikube
+            ```
+            curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+            sudo install minikube-linux-amd64 /usr/local/bin/minikube
+            ```
+         1. Start Kubernetes Cluster
+            ```
+            minikube start --cpus 8 --memory 8000 --disk-size=128g
+            ```
+            Successful creation of minikube cluster should result in the following output:
+            ```
+            😄  minikube v1.22.0 on Ubuntu 20.04
+            ✨  Automatically selected the docker driver. Other choices: kvm2, ssh
+            ❗  Your cgroup does not allow setting memory.
+            ▪ More information: https://docs.docker.com/engine/install/linux-postinstall/#your-kernel-does-not-support-cgroup-swap-limit-capabilities
+            👍  Starting control plane node minikube in cluster minikube
+            🚜  Pulling base image ...
+            🔥  Creating docker container (CPUs=8, Memory=16000MB) ...
+            🐳  Preparing Kubernetes v1.21.2 on Docker 20.10.7 ...
+            ▪ Generating certificates and keys ...
+            ▪ Booting up control plane ...
+            ▪ Configuring RBAC rules ...
+            🔎  Verifying Kubernetes components...
+            ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+            🌟  Enabled addons: storage-provisioner, default-storageclass
+            🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+            ```
+         1. Validate connection to Kubernetes cluster by running a `kubectl` command
+            ```
+            kubectl get nodes
+            
+            NAME       STATUS   ROLES                  AGE   VERSION
+            minikube   Ready    control-plane,master   18s   v1.21.2
+            ```
     </details>
-
-4. [Install Kubeflow](#install-kubeflow)
-5. [Clean up](#clean-up)
-
-## MacOS
-
-1. Install [Kustomize version 3.2.0](https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0)
-    - Navigate to `Assets` and download `kustomize_3.2.0_darwin_amd64`
-    - Run the following to make `kustomize` executable and move
-    ```
-    chmod +x kustomize_3.2.0_darwin_amd64 && mv kustomize_3.2.0_darwin_amd64 /usr/local/bin/kustomize
-    ```
-1. Install `kubectl` using brew
-   ```
-   brew install kubectl 
-   ```
-
-   Once installed, run the following command to validate successful installation
-   ```
-   kubectl version
-   ```
-
-   Output should look similar to below.
-   ```
-   Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"x.xx.x", GitCommit:"xxxxx", GitTreeState:"clean", BuildDate:"xxxx-xx-xxTxx:xx:xxx", GoVersion:"x.xx.x", Compiler:"gc", Platform:"darwin/amd64"}
-   ```
-1. Choose one of the following options to install and run [Kubernetes](https://kubernetes.io/) locally.
-    - [kind](#kind)
-    - [Docker Desktop for Mac](#docker-desktop-for-mac)
-    - [Minikube]()
 1. [Install Kubeflow](#install-kubeflow)
 1. [Clean up](#clean-up)
 
-### kind
 
-1. Download [kind](https://kind.sigs.k8s.io/) using brew
-   ```
-   brew install kind
-   ```
-1. Start Kubernetes Cluster
-   ```
-   kind create cluster
-   ```
-   Successful creation of kind cluster should result in the following output
-   ```
-   Creating cluster "kind" ...
-     ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
-     ✓ Preparing nodes 📦
-     ✓ Writing configuration 📜
-     ✓ Starting control-plane 🕹️
-     ✓ Installing CNI 🔌
-     ✓ Installing StorageClass 💾
-   Set kubectl context to "kind-kind"
-   You can now use your cluster with:
-
-   kubectl cluster-info --context kind-kind
-
-   Thanks for using kind! 😊
-   ```
-1. Validate connection to Kubernetes cluster by running a `kubectl` command
-   ```
-   kubectl get nodes
+## MacOS
+1. **Install Docker**
    
-   NAME                 STATUS   ROLES                  AGE   VERSION
-   kind-control-plane   Ready    control-plane,master   57s   v1.21.1
-   ```
-
-### Docker Desktop for Mac
-
-1. Download the [latest version of Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/)
-1. Navigate to preferences to change the resources
-    - 8 CPU, 16 GB RAM, 128GB Disk
-1. Navigate to [preferences to enable Kubernetes](https://docs.docker.com/desktop/kubernetes/#enable-kubernetes)
-1. Validate connection to Kubernetes cluster by running a `kubectl` command
-   ```
-   kubectl get nodes
+   [Docker](https://www.docker.com/) is an open platform for developing, shipping, and running applications.
    
-   NAME             STATUS   ROLES                  AGE   VERSION
-   docker-desktop   Ready    control-plane,master   1m    v1.21.2
-   ```
+   Choose **one** of the following options to install docker
+    - <details>
+         <summary>Docker Desktop for Mac</summary>
+      
+         [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop) is a tool that enables you to build and share containerized applications and microservices.
+      
+         - Follow the [instructions](https://docs.docker.com/docker-for-mac/install/) to download the docker desktop.
+         - Validate successful installation by running `docker`. Output should look similar to below.
+            ```
+            Usage:  docker [OPTIONS] COMMAND
 
-### Minikube
+            A self-sufficient runtime for containers
+            
+            Options:
+                  --config string      Location of client config files (default "/Users/antheaj/.docker")
+              -c, --context string     Name of the context to use to connect to the daemon (overrides DOCKER_HOST env var and default context set with
+                                       "docker context use")
+              -D, --debug              Enable debug mode
+              -H, --host list          Daemon socket(s) to connect to
+              -l, --log-level string   Set the logging level ("debug"|"info"|"warn"|"error"|"fatal") (default "info")
+                  --tls                Use TLS; implied by --tlsverify
+                  --tlscacert string   Trust certs signed only by this CA (default "/Users/antheaj/.docker/ca.pem")
+                  --tlscert string     Path to TLS certificate file (default "/Users/antheaj/.docker/cert.pem")
+                  --tlskey string      Path to TLS key file (default "/Users/antheaj/.docker/key.pem")
+                  --tlsverify          Use TLS and verify the remote
+              -v, --version            Print version information and quit
+            
+            Run 'docker COMMAND --help' for more information on a command.
+            
+            To get more help with docker, check out our guides at https://docs.docker.com/go/guides/
+           ```
+      </details>
+    - <details>
+         <summary>Homebrew</summary>
+      
+         [Homebrew](https://brew.sh/) is a software package manager that makes it easier to install software on macOS.
+      
+         - Download docker using brew
+            ```
+            brew install --cask docker
+            ```
+         - Validate successful installation by running `docker`. Output should look similar to below.
+            ```
+            Usage:  docker [OPTIONS] COMMAND
 
-1. Install [VMware Fusion](https://www.vmware.com/products/fusion.html) or [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-
-1. Download [minikube](https://minikube.sigs.k8s.io/docs/) using brew
-   ```
-   brew install minikube
-   ```
-   or
-   ```
-   brew cask install minikube
-   ```
-1. Start Kubernetes Cluster
-   ```
-   minikube start --cpus 8 --memory 16000 --disk-size=128g
-   ```
-   Successful creation of minikube cluster should result in the following output
-   ```
-   😄  minikube v1.22.0 on Darwin 11.5
-   ✨  Automatically selected the docker driver. Other choices: hyperkit, vmware, virtualbox, ssh
-   👍  Starting control plane node minikube in cluster minikube
-   🚜  Pulling base image ...
-   💾  Downloading Kubernetes v1.21.2 preload ...
-   🔥  Creating docker container (CPUs=8, Memory=16000MB) ...
-   🐳  Preparing Kubernetes v1.21.2 on Docker 20.10.7 ...
-       ▪ Generating certificates and keys ...
-       ▪ Booting up control plane ...
-       ▪ Configuring RBAC rules ...
-   🔎  Verifying Kubernetes components...
-       ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
-   🌟  Enabled addons: storage-provisioner, default-storageclass
-   🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
-   ```
-1. Validate connection to Kubernetes cluster by running a `kubectl` command
-   ```
-   kubectl get nodes
+            A self-sufficient runtime for containers
+            
+            Options:
+                  --config string      Location of client config files (default "/Users/antheaj/.docker")
+              -c, --context string     Name of the context to use to connect to the daemon (overrides DOCKER_HOST env var and default context set with
+                                       "docker context use")
+              -D, --debug              Enable debug mode
+              -H, --host list          Daemon socket(s) to connect to
+              -l, --log-level string   Set the logging level ("debug"|"info"|"warn"|"error"|"fatal") (default "info")
+                  --tls                Use TLS; implied by --tlsverify
+                  --tlscacert string   Trust certs signed only by this CA (default "/Users/antheaj/.docker/ca.pem")
+                  --tlscert string     Path to TLS certificate file (default "/Users/antheaj/.docker/cert.pem")
+                  --tlskey string      Path to TLS key file (default "/Users/antheaj/.docker/key.pem")
+                  --tlsverify          Use TLS and verify the remote
+              -v, --version            Print version information and quit
+            
+            Run 'docker COMMAND --help' for more information on a command.
+            
+            To get more help with docker, check out our guides at https://docs.docker.com/go/guides/
+           ```
+      </details>
    
-   NAME       STATUS   ROLES                  AGE   VERSION
-   minikube   Ready    control-plane,master   45s   v1.21.2
-   ```
+1. **Install Kustomize**
+   
+   [Kustomize](https://kustomize.io/) is a tool for customizing Kubernetes resource configuration free from templates and DSLs.
+   
+   To install Kustomize version 3.2.0,
+    - Navigate [Kustomize release page](https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0) assets
+      and download `kustomize_3.2.0_darwin_amd64`
+    - Make `kustomize` executable and move it to `/usr/local/bin` directory
+      ```
+      chmod +x kustomize_3.2.0_darwin_amd64 && mv kustomize_3.2.0_darwin_amd64 /usr/local/bin/kustomize
+      ```
+   - Validate successful installation by running `kustomize`. Output should look similar to below.
+      ```
+      Manages declarative configuration of Kubernetes.
+      See https://sigs.k8s.io/kustomize
+      
+      Usage:
+        kustomize [command]
+      
+      Available Commands:
+        build       Print configuration per contents of kustomization.yaml
+        config      Config Kustomize transformers
+        create      Create a new kustomization in the current directory
+        edit        Edits a kustomization file
+        help        Help about any command
+        version     Prints the kustomize version
+      
+      Flags:
+        -h, --help   help for kustomize
+      
+      Use "kustomize [command] --help" for more information about a command.
+      ```
+1. **Install kubectl**
+
+   [kubectl](https://kubernetes.io/docs/reference/kubectl/overview/) is a Kubernetes command-line tool that
+   allows you to run commands against Kubernetes clusters.
+   
+   - Install kubectl
+      ```
+      brew install kubectl 
+      ```
+   - Validate successful installation by running `kubectl version`. Output should look similar to below.
+      ```
+      Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"x.xx.x", GitCommit:"xxxxx", GitTreeState:"clean", BuildDate:"xxxx-xx-xxTxx:xx:xxx", GoVersion:"x.xx.x", Compiler:"gc", Platform:"darwin/amd64"}
+      ```
+1. **Install [Kubernetes](https://kubernetes.io/) locally** </br>
+   Choose **one** of the following options to install Kubernetes
+    - <details>
+         <summary>Kind</summary>
+         
+         [Kind](https://kind.sigs.k8s.io/) is a tool for running local Kubernetes clusters using Docker container “nodes”.
+
+         1. Download kind using brew
+            ```
+            brew install kind
+            ```
+         1. Start Kubernetes Cluster
+            ```
+            kind create cluster
+            ```
+            Successful creation of kind cluster should result in the following output
+            ```
+            Creating cluster "kind" ...
+              ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+              ✓ Preparing nodes 📦
+              ✓ Writing configuration 📜
+              ✓ Starting control-plane 🕹️
+              ✓ Installing CNI 🔌
+              ✓ Installing StorageClass 💾
+            Set kubectl context to "kind-kind"
+            You can now use your cluster with:
+         
+            kubectl cluster-info --context kind-kind
+         
+            Thanks for using kind! 😊
+            ```
+         1. Validate connection to Kubernetes cluster by running a `kubectl` command
+            ```
+            kubectl get nodes
+            
+            NAME                 STATUS   ROLES                  AGE   VERSION
+            kind-control-plane   Ready    control-plane,master   57s   v1.21.1
+            ```
+      </details>
+    - <details>
+         <summary>Docker Desktop for Mac</summary>
+         
+         [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop) is a tool that enables you to build and share containerized applications and microservices.
+
+         1. Download the [latest version of Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/)
+            and follow the [instructions to install and run Docker Desktop](https://docs.docker.com/docker-for-mac/install/#install-and-run-docker-desktop-on-mac)
+         1. Navigate to [preferences -> resources](https://docs.docker.com/docker-for-mac/#resources)
+            to modify the resource limit to (recommended) 8 CPU, 8 GB RAM, and 128GB Disk
+         1. Navigate to [preferences to enable Kubernetes](https://docs.docker.com/desktop/kubernetes/#enable-kubernetes)
+         1. Validate connection to Kubernetes cluster by running a `kubectl` command
+            ```
+            kubectl get nodes
+            
+            NAME             STATUS   ROLES                  AGE   VERSION
+            docker-desktop   Ready    control-plane,master   1m    v1.21.2
+            ```
+      </details>
+    - <details>
+         <summary>Minikube</summary>
+         
+         [Minikube](https://minikube.sigs.k8s.io/) is a tool for running local Kubernetes clusters using a Hypervisor.
+         
+         1. Install [VMware Fusion](https://www.vmware.com/products/fusion.html)
+            or [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+            or other hypervisors.
+         
+         1. Download minikube using brew
+            ```
+            brew install minikube
+            ```
+            or
+            ```
+            brew install --cask minikube
+            ```
+         1. Start Kubernetes Cluster
+            ```
+            minikube start --cpus 8 --memory 8000 --disk-size=128g
+            ```
+            Successful creation of minikube cluster should result in the following output
+            ```
+            😄  minikube v1.22.0 on Darwin 11.5
+            ✨  Automatically selected the docker driver. Other choices: hyperkit, vmware, virtualbox, ssh
+            👍  Starting control plane node minikube in cluster minikube
+            🚜  Pulling base image ...
+            💾  Downloading Kubernetes v1.21.2 preload ...
+            🔥  Creating docker container (CPUs=8, Memory=16000MB) ...
+            🐳  Preparing Kubernetes v1.21.2 on Docker 20.10.7 ...
+                ▪ Generating certificates and keys ...
+                ▪ Booting up control plane ...
+                ▪ Configuring RBAC rules ...
+            🔎  Verifying Kubernetes components...
+                ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+            🌟  Enabled addons: storage-provisioner, default-storageclass
+            🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+            ```
+         1. Validate connection to Kubernetes cluster by running a `kubectl` command
+            ```
+            kubectl get nodes
+            
+            NAME       STATUS   ROLES                  AGE   VERSION
+            minikube   Ready    control-plane,master   45s   v1.21.2
+            ```
+   </details>
+
+## Windows
+
+Coming Soon
 
 ## Install Kubeflow
-The installation process for Kubeflow is the same for all environments.
+
+The installation process for Kubeflow is the same for all operating systems.
+
 1. Create a directory `workspace` and clone the `kubeflow/manifest` repo.
     ```
     mkdir -p ~/workspace && cd ~/workspace;
@@ -352,15 +532,6 @@ The installation process for Kubeflow is the same for all environments.
         knative-serving             istio-webhook-68fddcc567-48qmx                              2/2     Running   0          12m
         knative-serving             networking-istio-5664b9fb9c-6jbwq                           2/2     Running   1          12m
         knative-serving             webhook-6c8b54d9-jqfc4                                      2/2     Running   1          12m
-        kube-system                 coredns-558bd4d5db-7spkm                                    1/1     Running   0          13m
-        kube-system                 coredns-558bd4d5db-vqlp5                                    1/1     Running   0          13m
-        kube-system                 etcd-docker-desktop                                         1/1     Running   0          13m
-        kube-system                 kube-apiserver-docker-desktop                               1/1     Running   0          13m
-        kube-system                 kube-controller-manager-docker-desktop                      1/1     Running   0          13m
-        kube-system                 kube-proxy-nmcmh                                            1/1     Running   0          13m
-        kube-system                 kube-scheduler-docker-desktop                               1/1     Running   0          13m
-        kube-system                 storage-provisioner                                         1/1     Running   0          13m
-        kube-system                 vpnkit-controller                                           1/1     Running   2          13m
         kubeflow-user-example-com   ml-pipeline-ui-artifact-767659f9df-rftfz                    2/2     Running   0          11m
         kubeflow-user-example-com   ml-pipeline-visualizationserver-6ff9f47c6b-nlsmg            2/2     Running   0          11m
         kubeflow                    admission-webhook-deployment-f5d8f47f8-pgf5k                1/1     Running   0          12m
@@ -410,25 +581,30 @@ The installation process for Kubeflow is the same for all environments.
 
    Once successfully logged in, Kubeflow Dashboard should be available for use.
 
-### Clean up
- - Run the following command to uninstall Kubeflow
- ```
- cd ~/workspace/manifests;
- kustomize build example | kubectl delete -f -;
- ```
-Validate the resource deletion by running `kubectl get pod --all-namespaces`
+## Clean up
+- [Kubeflow Resources](#kubeflow-resources)
+- [Kubernetes Cluster](#kubernetes-cluster)
 
- - To stop running Kubernetes follow the instructions for each options
-     - kind
-         - Run the following to delete the cluster
-         ```
-         kind delete cluster
-         ```
-     - Docker Desktop for Mac
-         - Navigate to Docker for Mac preferences -> kubernetes to disable Kubernetes
-     - Minikube
-         - Run the following to stop and delete the cluster
-         ```
-         minikube stop
-         minikube delete --all
-         ```
+### Kubeflow Resources
+1. Run the following command to uninstall Kubeflow
+  ```
+  cd ~/workspace/manifests;
+  kustomize build example | kubectl delete -f -;
+  ```
+2. Validate the resource deletion by running `kubectl get pod --all-namespaces`
+
+### Kubernetes Cluster
+To stop running Kubernetes follow the instructions below based on how Kubernetes cluster was installed
+- kind
+  - Run the following to delete the cluster
+    ```
+    kind delete cluster
+    ```
+- Docker Desktop for Mac
+   - Navigate to Docker for Mac preferences -> kubernetes to disable Kubernetes 
+- Minikube
+   - Run the following to stop and delete the cluster
+     ```
+     minikube stop 
+     minikube delete --all
+     ```
