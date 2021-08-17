@@ -61,7 +61,7 @@ This is a setup guide to install Kubeflow on a local machine. Follow the instruc
       ```
    - Make `kustomize` executable and move it to `/usr/local/bin` directory
       ```
-      chmod +x kustomize_3.2.0_linux_amd64 && sudo mv kustomize_3.2.0_darwin_amd64 /usr/local/bin/kustomize
+      chmod +x kustomize_3.2.0_linux_amd64 && sudo mv kustomize_3.2.0_linux_amd64 /usr/local/bin/kustomize
       ```
    - Validate successful installation by running `kustomize`
       Output should look similar to below
@@ -115,7 +115,7 @@ This is a setup guide to install Kubeflow on a local machine. Follow the instruc
          1. Download kind
             ```
             curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
-            chmod +x ./kind && mv ./kind /usr/local/bin/kind
+            chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
             ```
          1. Start Kubernetes Cluster
             ```
@@ -428,7 +428,7 @@ The installation process for Kubeflow is the same for all operating systems.
     mkdir -p ~/workspace && cd ~/workspace;
     git clone https://github.com/kubeflow/manifests.git && cd manifests;
     ```
-1. Modify `manifests/common/dex/base/deployment.yaml` file to include the following as a workaround for current problem
+1. Modify `common/dex/base/deployment.yaml` file to include the following as a workaround for current problem
    with [1.21 Kubernetes cluster and Dex](https://github.com/dexidp/dex/issues/2082). This should not be necessary
    when [workaround](https://github.com/kubeflow/manifests/pull/1883)
    PR merges.
