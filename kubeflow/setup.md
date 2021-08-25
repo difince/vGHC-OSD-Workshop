@@ -191,6 +191,22 @@ This is a setup guide to install Kubeflow on a local machine. Follow the instruc
             ```
     </details>
 1. [Install Kubeflow](#install-kubeflow)
+1. **Install Jupyter Notebook**
+   
+   **Note**: Jupyter Notebook installation is required only in case of standalone Kubeflow Pipelines installation.
+   
+   - Upgrade pip to the latest version
+   
+     ```pip install --upgrade pip```
+   
+   - Install the Jupyter Notebook:
+   
+     ```pip install jupyter```
+   - Start the notebook server:
+   
+     ```jupyter notebook```
+   - You should see the notebook open in your browser.
+
 1. [Clean up](#clean-up)
 
 
