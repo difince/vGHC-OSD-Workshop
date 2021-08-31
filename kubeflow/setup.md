@@ -191,7 +191,7 @@ This is a setup guide to install Kubeflow on a local machine. Follow the instruc
             ```
     </details>
 1. [Install Kubeflow](#install-kubeflow)
-1. **Install Jupyter Notebook**
+1. [Optional] **Install Jupyter Notebook**
    
    **Note**: Jupyter Notebook installation is required only in case of standalone Kubeflow Pipelines installation.
    
@@ -438,9 +438,13 @@ Coming Soon
 ## Install Kubeflow
 
 The installation process for Kubeflow is the same for all operating systems.
-Deploying the entire Kubeflow could be too heavy task for computers with 16 GB RAM or less. Depending on the hardware
-resources, there are two ways to proceed. First to install the entire Kubeflow. Second, in case no enough resources, to
-deploy just the Pipeline Component of the Kubeflow.
+
+Deploying the entire Kubeflow stack could be too heavy task for computers with 16 GB RAM or less.
+Depending on the hardware resources, there are two ways to proceed. 
+1. Install the entire Kubeflow
+1. Install just the Pipeline Component of the Kubeflow
+
+Please choose one of the option below based on available resources. 
 
 <details>
    <summary>Deploy Kubeflow</summary>
@@ -605,7 +609,7 @@ deploy just the Pipeline Component of the Kubeflow.
 </details>
 
 <details>
-   <summary>Deploy Kubeflow Pipelines</summary>
+   <summary>Deploy Standalone Kubeflow Pipelines</summary>
    
 1. Deploy the Kubeflow Pipelines by running the following commands:
    ```
