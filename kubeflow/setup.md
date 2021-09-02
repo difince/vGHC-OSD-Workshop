@@ -194,6 +194,7 @@ This is a setup guide to install Kubeflow on a local machine. Follow the instruc
 1. [Optional] **Install Jupyter Notebook**
    
    **Note**: Jupyter Notebook installation is required only in case of standalone Kubeflow Pipelines installation.
+      Please make sure to use python 3.5 or above and set up a python 3 environment using `venv`, `pipenv`, `conda` or other tool.
    
    - Upgrade pip to the latest version
    
@@ -202,9 +203,11 @@ This is a setup guide to install Kubeflow on a local machine. Follow the instruc
    - Install the Jupyter Notebook:
    
      ```pip install jupyter```
+   
    - Start the notebook server:
    
      ```jupyter notebook```
+   
    - You should see the notebook open in your browser.
 
 1. [Clean up](#clean-up)
@@ -685,7 +688,9 @@ Please choose one of the option below based on available resources.
    kubectl delete -k "github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=$PIPELINE_VERSION"
    ```
 2. Validate the resource deletion by running `kubectl get pod --all-namespaces`
+
 ### Kubernetes Cluster
+
 To stop running Kubernetes follow the instructions below based on how Kubernetes cluster was installed
 - kind
   - Run the following to delete the cluster
