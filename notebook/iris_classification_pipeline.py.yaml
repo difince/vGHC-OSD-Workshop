@@ -2,10 +2,10 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: iris-classification-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.7.2, pipelines.kubeflow.org/pipeline_compilation_time: '2021-09-02T14:53:48.099440',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.6.3, pipelines.kubeflow.org/pipeline_compilation_time: '2021-09-15T12:30:41.113173',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A basic pipeline example
       for iris classification", "name": "iris-classification"}'}
-  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.7.2}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.6.3}
 spec:
   entrypoint: iris-classification
   templates:
@@ -17,31 +17,21 @@ spec:
     dag:
       tasks:
       - {name: train-knn, template: train-knn}
-  - name: condition-3
-    dag:
-      tasks:
-      - {name: train-svm, template: train-svm}
   - name: iris-classification
     dag:
       tasks:
       - name: condition-1
         template: condition-1
         when: '{{tasks.train-using-decision-tree.outputs.parameters.train-using-decision-tree-output}}
-          >= {{tasks.train-using-support-vector-machine.outputs.parameters.train-using-support-vector-machine-output}}'
-        dependencies: [train-using-decision-tree, train-using-support-vector-machine]
+          >= {{tasks.train-using-k-nearest-neighbors.outputs.parameters.train-using-k-nearest-neighbors-output}}'
+        dependencies: [train-using-decision-tree, train-using-k-nearest-neighbors]
       - name: condition-2
         template: condition-2
         when: '{{tasks.train-using-k-nearest-neighbors.outputs.parameters.train-using-k-nearest-neighbors-output}}
-          >= {{tasks.train-using-support-vector-machine.outputs.parameters.train-using-support-vector-machine-output}}'
-        dependencies: [train-using-k-nearest-neighbors, train-using-support-vector-machine]
-      - name: condition-3
-        template: condition-3
-        when: '{{tasks.train-using-support-vector-machine.outputs.parameters.train-using-support-vector-machine-output}}
-          >= {{tasks.train-using-k-nearest-neighbors.outputs.parameters.train-using-k-nearest-neighbors-output}}'
-        dependencies: [train-using-k-nearest-neighbors, train-using-support-vector-machine]
+          >= {{tasks.train-using-decision-tree.outputs.parameters.train-using-decision-tree-output}}'
+        dependencies: [train-using-decision-tree, train-using-k-nearest-neighbors]
       - {name: train-using-decision-tree, template: train-using-decision-tree}
       - {name: train-using-k-nearest-neighbors, template: train-using-k-nearest-neighbors}
-      - {name: train-using-support-vector-machine, template: train-using-support-vector-machine}
   - name: train-knn
     container:
       args: [python3  iris_classification.py save_final_model knn]
@@ -51,23 +41,7 @@ spec:
       artifacts:
       - {name: train-knn-output, path: /tmp/knn.pkl}
     metadata:
-      labels:
-        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
-        pipelines.kubeflow.org/pipeline-sdk-type: kfp
-        pipelines.kubeflow.org/enable_caching: "true"
-  - name: train-svm
-    container:
-      args: [python3  iris_classification.py save_final_model svm]
-      command: [sh, -c]
-      image: annajung/iris:latest
-    outputs:
-      artifacts:
-      - {name: train-svm-output, path: /tmp/svm.pkl}
-    metadata:
-      labels:
-        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
-        pipelines.kubeflow.org/pipeline-sdk-type: kfp
-        pipelines.kubeflow.org/enable_caching: "true"
+      labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.6.3, pipelines.kubeflow.org/pipeline-sdk-type: kfp}
   - name: train-tree
     container:
       args: [python3  iris_classification.py save_final_model tree]
@@ -77,10 +51,7 @@ spec:
       artifacts:
       - {name: train-tree-output, path: /tmp/tree.pkl}
     metadata:
-      labels:
-        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
-        pipelines.kubeflow.org/pipeline-sdk-type: kfp
-        pipelines.kubeflow.org/enable_caching: "true"
+      labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.6.3, pipelines.kubeflow.org/pipeline-sdk-type: kfp}
   - name: train-using-decision-tree
     container:
       args: [python iris_classification.py build_model tree]
@@ -93,10 +64,7 @@ spec:
       artifacts:
       - {name: train-using-decision-tree-output, path: /tmp/accuracy_tree.txt}
     metadata:
-      labels:
-        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
-        pipelines.kubeflow.org/pipeline-sdk-type: kfp
-        pipelines.kubeflow.org/enable_caching: "true"
+      labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.6.3, pipelines.kubeflow.org/pipeline-sdk-type: kfp}
   - name: train-using-k-nearest-neighbors
     container:
       args: [python iris_classification.py build_model knn]
@@ -109,27 +77,7 @@ spec:
       artifacts:
       - {name: train-using-k-nearest-neighbors-output, path: /tmp/accuracy_knn.txt}
     metadata:
-      labels:
-        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
-        pipelines.kubeflow.org/pipeline-sdk-type: kfp
-        pipelines.kubeflow.org/enable_caching: "true"
-  - name: train-using-support-vector-machine
-    container:
-      args: [python iris_classification.py build_model svm]
-      command: [sh, -c]
-      image: annajung/iris:latest
-    outputs:
-      parameters:
-      - name: train-using-support-vector-machine-output
-        valueFrom: {path: /tmp/accuracy_svm.txt}
-      artifacts:
-      - {name: train-using-support-vector-machine-output, path: /tmp/accuracy_svm.txt}
-    metadata:
-      labels:
-        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
-        pipelines.kubeflow.org/pipeline-sdk-type: kfp
-        pipelines.kubeflow.org/enable_caching: "true"
+      labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.6.3, pipelines.kubeflow.org/pipeline-sdk-type: kfp}
   arguments:
     parameters: []
   serviceAccountName: pipeline-runner
-  ttlSecondsAfterFinished: 500

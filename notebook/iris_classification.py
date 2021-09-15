@@ -24,8 +24,6 @@ def build_model(model=""):
 
     if model == "knn":
         classifier = neighbors.KNeighborsClassifier()
-    elif model == "svm":
-        classifier = svm.SVC()
     else:
         model = "tree"
         classifier = tree.DecisionTreeClassifier()
