@@ -455,67 +455,12 @@ Please choose one of the option below based on available resources.
 1. Create a directory `workspace` and clone the `kubeflow/manifest` repo.
     ```
     mkdir -p ~/workspace && cd ~/workspace;
-    git clone https://github.com/kubeflow/manifests.git && cd manifests;
+    git clone https://github.com/difince/kubeflow-manifest-1.3.1.git && cd manifests;
     ```
-1. Modify `common/dex/base/deployment.yaml` file to include the following as a workaround for current problem
-   with [1.21 Kubernetes cluster and Dex](https://github.com/dexidp/dex/issues/2082). This should not be necessary
-   when [workaround](https://github.com/kubeflow/manifests/pull/1883)
-   PR merges.
-    ```yaml
-    env:
-    - name: KUBERNETES_POD_NAMESPACE
-      valueFrom:
-        fieldRef:
-          fieldPath: metadata.namespace
-    ```
+   Note: For the use of this vGHC workshop the repository used above is a modified version of kubeflow/manifest version 1.3.1. For future references use the original 
+   [kubeflow/manifest](https://github.com/kubeflow/manifests) repository. 
+   
 
-   The content of the `~/workspace/manifests/common/dex/base/deployment.yaml` file should match the content below.
-    <details>
-        <summary>Dex Deployment File Content</summary>
-
-         apiVersion: apps/v1
-         kind: Deployment
-         metadata:
-           labels:
-             app: dex
-           name: dex
-         spec:
-           replicas: 1
-           selector:
-             matchLabels:
-                 app: dex
-           template:
-             metadata:
-               labels:
-                 app: dex
-             spec:
-               serviceAccountName: dex
-               containers:
-               - image: quay.io/dexidp/dex:v2.22.0
-                 name: dex
-                 command: ["dex", "serve", "/etc/dex/cfg/config.yaml"]
-                 ports:
-                 - name: http
-                   containerPort: 5556
-                 volumeMounts:
-                 - name: config
-                   mountPath: /etc/dex/cfg
-                 envFrom:
-                   - secretRef:
-                       name: dex-oidc-client
-                 env:
-                   - name: KUBERNETES_POD_NAMESPACE
-                     valueFrom:
-                       fieldRef:
-                         fieldPath: metadata.namespace
-               volumes:
-               - name: config
-                 configMap:
-                   name: dex
-                   items:
-                   - key: config.yaml
-                     path: config.yaml
-    </details>
 1. Install Kubeflow using `kustomize`.
     ```
     while ! kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
