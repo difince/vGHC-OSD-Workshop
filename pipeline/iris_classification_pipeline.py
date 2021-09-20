@@ -23,9 +23,6 @@ def iris_classification_pipeline():
         file_outputs={'output': '/tmp/accuracy_knn.txt'}
     )
 
-    # outputs = {"tree": tree.output, "knn": knn.output, "svm": svm.output}
-    # best_model = max(outputs, key=outputs.get)
-
     with dsl.Condition(tree.output >= knn.output):
         c = dsl.ContainerOp(
             name='Train Tree',

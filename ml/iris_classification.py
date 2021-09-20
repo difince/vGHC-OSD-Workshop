@@ -1,7 +1,6 @@
 import joblib
 from sklearn import datasets
 from sklearn import neighbors
-from sklearn import svm
 from sklearn import tree
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
