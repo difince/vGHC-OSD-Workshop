@@ -6,12 +6,12 @@ from kfp import dsl
     name='iris-classification',
     description='A basic pipeline example for iris classification'
 )
-def iris_classification_pipeline():
+def iris_classification_pipeline(n_neighbors=2, splitter="random"):
     tree = dsl.ContainerOp(
         name="Train using Decision Tree",
         image="annajung/iris:latest",
         command=["sh", "-c"],
-        arguments=["python iris_classification.py build_model tree"],
+        arguments=["python iris_classification.py build_model tree " + str(splitter)],
         file_outputs={'output': '/tmp/accuracy_tree.txt'}
     )
 
@@ -19,7 +19,7 @@ def iris_classification_pipeline():
         name="Train using K Nearest Neighbors",
         image="annajung/iris:latest",
         command=["sh", "-c"],
-        arguments=["python iris_classification.py build_model knn"],
+        arguments=["python iris_classification.py build_model knn " + str(n_neighbors)],
         file_outputs={'output': '/tmp/accuracy_knn.txt'}
     )
 
@@ -28,7 +28,7 @@ def iris_classification_pipeline():
             name='Train Tree',
             image="annajung/iris:latest",
             command=['sh', '-c'],
-            arguments=['python3  iris_classification.py save_final_model tree'],
+            arguments=["python3  iris_classification.py save_final_model tree " + str(splitter)],
             file_outputs={'output': '/tmp/tree.pkl'},
         )
 
@@ -37,7 +37,7 @@ def iris_classification_pipeline():
             name='Train KNN',
             image="annajung/iris:latest",
             command=['sh', '-c'],
-            arguments=['python3  iris_classification.py save_final_model knn'],
+            arguments=["python3  iris_classification.py save_final_model knn " + str(n_neighbors)],
             file_outputs={'output': '/tmp/knn.pkl'},
         )
 

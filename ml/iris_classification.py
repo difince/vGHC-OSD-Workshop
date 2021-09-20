@@ -6,26 +6,18 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 
-def download_data():
+def build_model(model="", parameter=""):
     iris_dataset = datasets.load_iris()
     X = iris_dataset.data
     y = iris_dataset.target
-    return X, y
 
-
-def split_data(X, y, test_size=0.25):
-    return train_test_split(X, y, test_size=test_size)
-
-
-def build_model(model=""):
-    X, y = download_data()
-    X_train, X_test, y_train, y_test = split_data(X, y)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
 
     if model == "knn":
-        classifier = neighbors.KNeighborsClassifier()
+        classifier = neighbors.KNeighborsClassifier(n_neighbors=int(parameter))
     else:
         model = "tree"
-        classifier = tree.DecisionTreeClassifier()
+        classifier = tree.DecisionTreeClassifier(splitter=parameter)
 
     classifier.fit(X_train, y_train)
 
@@ -40,12 +32,12 @@ def build_model(model=""):
     return classifier
 
 
-def save_final_model(model=""):
-    classifier = build_model(model)
+def save_final_model(model="", parameter=""):
+    classifier = build_model(model, parameter)
     joblib.dump(classifier, "/tmp/{}.pkl".format(model))
 
 
 if __name__ == '__main__':
     import sys
 
-    globals()[sys.argv[1]](sys.argv[2])
+    globals()[sys.argv[1]](sys.argv[2], sys.argv[3])
