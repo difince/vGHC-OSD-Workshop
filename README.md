@@ -7,5 +7,3 @@ To prepare for the workshop, follow the [setup guide](./kubeflow/setup.md) to in
 - Kubeflow (standalone pipeline or full stack)
 - Jupyter Notebook (only if using standalone pipeline)
 
-
-

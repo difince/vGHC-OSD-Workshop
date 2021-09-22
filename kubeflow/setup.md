@@ -63,9 +63,11 @@ This is a setup guide to install Kubeflow on a local machine. Follow the instruc
       ```
       chmod +x kustomize_3.2.0_linux_amd64 && sudo mv kustomize_3.2.0_linux_amd64 /usr/local/bin/kustomize
       ```
-   - Validate successful installation by running `kustomize`
-      Output should look similar to below
-      ```
+   - Validate successful installation by running `kustomize`. Output should look similar to below
+     <details>
+     <summary>Successful Output</summary>
+     
+     ```
       Manages declarative configuration of Kubernetes.
       See https://sigs.k8s.io/kustomize
       
@@ -85,6 +87,7 @@ This is a setup guide to install Kubeflow on a local machine. Follow the instruc
       
       Use "kustomize [command] --help" for more information about a command.
       ```
+     </details>
 
 1. **Install kubectl**
 
@@ -296,8 +299,11 @@ This is a setup guide to install Kubeflow on a local machine. Follow the instruc
       ```
       chmod +x kustomize_3.2.0_darwin_amd64 && mv kustomize_3.2.0_darwin_amd64 /usr/local/bin/kustomize
       ```
-   - Validate successful installation by running `kustomize`. Output should look similar to below.
-      ```
+   - Validate successful installation by running `kustomize`. Output should look similar to below
+     <details>
+     <summary>Successful Output</summary>
+     
+     ```
       Manages declarative configuration of Kubernetes.
       See https://sigs.k8s.io/kustomize
       
@@ -317,6 +323,8 @@ This is a setup guide to install Kubeflow on a local machine. Follow the instruc
       
       Use "kustomize [command] --help" for more information about a command.
       ```
+     </details>
+
 1. **Install kubectl**
 
    [kubectl](https://kubernetes.io/docs/reference/kubectl/overview/) is a Kubernetes command-line tool that
