@@ -1,0 +1,59 @@
+apiVersion: kubeflow.org/v1beta1
+kind: Experiment
+metadata:
+  name: iris-knn-katib-example
+  namespace: "kubeflow-user-example-com"
+spec:
+  algorithm:
+    algorithmName: random
+  maxFailedTrialCount: 3
+  maxTrialCount: 12
+  metricsCollectorSpec:
+    collector:
+      kind: StdOut
+  objective:
+    additionalMetricNames:
+      - Train-accuracy
+    goal: 0.99
+    metricStrategies:
+      - name: Validation-accuracy
+        value: max
+      - name: Train-accuracy
+        value: max
+    objectiveMetricName: Validation-accuracy
+    type: maximize
+  parallelTrialCount: 3
+  parameters:
+    - feasibleSpace:
+        max: "10"
+        min: "1"
+      name: n_neighbors
+      parameterType: int
+  resumePolicy: LongRunning
+  trialTemplate:
+    failureCondition: status.conditions.#(type=="Failed")#|#(status=="True")#
+    primaryContainerName: training-container
+    successCondition: status.conditions.#(type=="Complete")#|#(status=="True")#
+    trialParameters:
+      - description: Number of training model neighbors
+        name: n_neighbors
+        reference: n_neighbors
+    trialSpec:
+      apiVersion: batch/v1
+      kind: Job
+      spec:
+        template:
+          metadata:
+            annotations:
+              sidecar.istio.io/inject: "false"
+          spec:
+            containers:
+              - command:
+                  - python3
+                  - iris_classification.py build_model
+                  - build_model
+                  - knn
+                  - ${trialParameters.n_neighbors}
+                image: docker.io/annajung/iris:latest
+                name: training-container
+            restartPolicy: Never

@@ -1,0 +1,144 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: iris-classification-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.7.2, pipelines.kubeflow.org/pipeline_compilation_time: '2021-09-20T15:50:01.688085',
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "A basic pipeline example
+      for iris classification", "inputs": [{"default": "2", "name": "n_neighbors",
+      "optional": true}, {"default": "random", "name": "splitter", "optional": true}],
+      "name": "iris-classification"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.7.2}
+spec:
+  entrypoint: iris-classification
+  templates:
+  - name: condition-1
+    inputs:
+      parameters:
+      - {name: splitter}
+    dag:
+      tasks:
+      - name: train-tree
+        template: train-tree
+        arguments:
+          parameters:
+          - {name: splitter, value: '{{inputs.parameters.splitter}}'}
+  - name: condition-2
+    inputs:
+      parameters:
+      - {name: n_neighbors}
+    dag:
+      tasks:
+      - name: train-knn
+        template: train-knn
+        arguments:
+          parameters:
+          - {name: n_neighbors, value: '{{inputs.parameters.n_neighbors}}'}
+  - name: iris-classification
+    inputs:
+      parameters:
+      - {name: n_neighbors}
+      - {name: splitter}
+    dag:
+      tasks:
+      - name: condition-1
+        template: condition-1
+        when: '{{tasks.train-using-decision-tree.outputs.parameters.train-using-decision-tree-output}}
+          >= {{tasks.train-using-k-nearest-neighbors.outputs.parameters.train-using-k-nearest-neighbors-output}}'
+        dependencies: [train-using-decision-tree, train-using-k-nearest-neighbors]
+        arguments:
+          parameters:
+          - {name: splitter, value: '{{inputs.parameters.splitter}}'}
+      - name: condition-2
+        template: condition-2
+        when: '{{tasks.train-using-k-nearest-neighbors.outputs.parameters.train-using-k-nearest-neighbors-output}}
+          >= {{tasks.train-using-decision-tree.outputs.parameters.train-using-decision-tree-output}}'
+        dependencies: [train-using-decision-tree, train-using-k-nearest-neighbors]
+        arguments:
+          parameters:
+          - {name: n_neighbors, value: '{{inputs.parameters.n_neighbors}}'}
+      - name: train-using-decision-tree
+        template: train-using-decision-tree
+        arguments:
+          parameters:
+          - {name: splitter, value: '{{inputs.parameters.splitter}}'}
+      - name: train-using-k-nearest-neighbors
+        template: train-using-k-nearest-neighbors
+        arguments:
+          parameters:
+          - {name: n_neighbors, value: '{{inputs.parameters.n_neighbors}}'}
+  - name: train-knn
+    container:
+      args: ['python3  iris_classification.py save_final_model knn {{inputs.parameters.n_neighbors}}']
+      command: [sh, -c]
+      image: annajung/iris:latest
+    inputs:
+      parameters:
+      - {name: n_neighbors}
+    outputs:
+      artifacts:
+      - {name: train-knn-output, path: /tmp/knn.pkl}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  - name: train-tree
+    container:
+      args: ['python3  iris_classification.py save_final_model tree {{inputs.parameters.splitter}}']
+      command: [sh, -c]
+      image: annajung/iris:latest
+    inputs:
+      parameters:
+      - {name: splitter}
+    outputs:
+      artifacts:
+      - {name: train-tree-output, path: /tmp/tree.pkl}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  - name: train-using-decision-tree
+    container:
+      args: ['python iris_classification.py build_model tree {{inputs.parameters.splitter}}']
+      command: [sh, -c]
+      image: annajung/iris:latest
+    inputs:
+      parameters:
+      - {name: splitter}
+    outputs:
+      parameters:
+      - name: train-using-decision-tree-output
+        valueFrom: {path: /tmp/accuracy_tree.txt}
+      artifacts:
+      - {name: train-using-decision-tree-output, path: /tmp/accuracy_tree.txt}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  - name: train-using-k-nearest-neighbors
+    container:
+      args: ['python iris_classification.py build_model knn {{inputs.parameters.n_neighbors}}']
+      command: [sh, -c]
+      image: annajung/iris:latest
+    inputs:
+      parameters:
+      - {name: n_neighbors}
+    outputs:
+      parameters:
+      - name: train-using-k-nearest-neighbors-output
+        valueFrom: {path: /tmp/accuracy_knn.txt}
+      artifacts:
+      - {name: train-using-k-nearest-neighbors-output, path: /tmp/accuracy_knn.txt}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  arguments:
+    parameters:
+    - {name: n_neighbors, value: '2'}
+    - {name: splitter, value: random}
+  serviceAccountName: pipeline-runner
+  ttlSecondsAfterFinished: 500
