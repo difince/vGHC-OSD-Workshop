@@ -50,7 +50,7 @@ spec:
             containers:
               - command:
                   - python3
-                  - iris_classification.py build_model
+                  - iris_classification.py
                   - build_model
                   - knn
                   - ${trialParameters.n_neighbors}
