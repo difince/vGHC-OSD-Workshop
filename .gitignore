@@ -1,0 +1,5 @@
+pipeline/.ipynb_checkpoints/
+ml/.ipynb_checkpoints/
+venv/
+.idea
+.DS_Store

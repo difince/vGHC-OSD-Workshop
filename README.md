@@ -1,10 +1,9 @@
-# Interactive Katacoda Scenarios
+# vGHC 2021 Open Source Day Workshop
 
-[![](http://shields.katacoda.com/katacoda/difince/count.svg)](https://www.katacoda.com/difince "Get your profile on Katacoda.com")
+**Workshop Title**: An Illustrated Guide to MLOps using Kubeflow
 
-Visit https://www.katacoda.com/difince to view the profile and interactive scenarios
+To prepare for the workshop, follow the [setup guide](./kubeflow/setup.md) to install 
+- Kubernetes
+- Kubeflow (standalone pipeline or full stack)
+- Jupyter Notebook (only if using standalone pipeline)
 
-### Writing Scenarios
-Visit https://www.katacoda.com/docs to learn more about creating Katacoda scenarios
-
-For examples, visit https://github.com/katacoda/scenario-example
