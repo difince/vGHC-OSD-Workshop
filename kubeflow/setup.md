@@ -460,10 +460,10 @@ Please choose one of the option below based on available resources.
 <details>
    <summary>Deploy Kubeflow</summary>
 
-1. Create a directory `workspace` and clone the `kubeflow/manifest` repo.
+1. Create a directory `workspace` and clone the `difince/kubeflow-manifest-1.3.1` repo.
     ```
     mkdir -p ~/workspace && cd ~/workspace;
-    git clone https://github.com/difince/kubeflow-manifest-1.3.1.git && cd manifests;
+    git clone https://github.com/difince/kubeflow-manifest-1.3.1.git && cd kubeflow-manifest-1.3.1;
     ```
    Note: For the use of this vGHC workshop the repository used above is a modified version of kubeflow/manifest version 1.3.1. For future references use the original 
    [kubeflow/manifest](https://github.com/kubeflow/manifests) repository. 
@@ -629,7 +629,7 @@ Please choose one of the option below based on available resources.
 1. Run the following commands to uninstall Kubeflow or Kubeflow Pipelines
    - Uninstall Kubeflow installation
    ```
-   cd ~/workspace/manifests;
+   cd ~/workspace/kubeflow-manifest-1.3.1;
    kustomize build example | kubectl delete -f -;
    ```
 
