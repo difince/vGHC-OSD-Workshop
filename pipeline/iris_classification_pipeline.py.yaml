@@ -2,12 +2,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: iris-classification-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.7.2, pipelines.kubeflow.org/pipeline_compilation_time: '2021-09-20T15:50:01.688085',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.2, pipelines.kubeflow.org/pipeline_compilation_time: '2021-09-23T15:00:34.017813',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A basic pipeline example
       for iris classification", "inputs": [{"default": "2", "name": "n_neighbors",
       "optional": true}, {"default": "random", "name": "splitter", "optional": true}],
       "name": "iris-classification"}'}
-  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.7.2}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.2}
 spec:
   entrypoint: iris-classification
   templates:
@@ -51,7 +51,7 @@ spec:
       - name: condition-2
         template: condition-2
         when: '{{tasks.train-using-k-nearest-neighbors.outputs.parameters.train-using-k-nearest-neighbors-output}}
-          >= {{tasks.train-using-decision-tree.outputs.parameters.train-using-decision-tree-output}}'
+          > {{tasks.train-using-decision-tree.outputs.parameters.train-using-decision-tree-output}}'
         dependencies: [train-using-decision-tree, train-using-k-nearest-neighbors]
         arguments:
           parameters:
@@ -79,7 +79,7 @@ spec:
       - {name: train-knn-output, path: /tmp/knn.pkl}
     metadata:
       labels:
-        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.2
         pipelines.kubeflow.org/pipeline-sdk-type: kfp
         pipelines.kubeflow.org/enable_caching: "true"
   - name: train-tree
@@ -95,7 +95,7 @@ spec:
       - {name: train-tree-output, path: /tmp/tree.pkl}
     metadata:
       labels:
-        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.2
         pipelines.kubeflow.org/pipeline-sdk-type: kfp
         pipelines.kubeflow.org/enable_caching: "true"
   - name: train-using-decision-tree
@@ -114,7 +114,7 @@ spec:
       - {name: train-using-decision-tree-output, path: /tmp/accuracy_tree.txt}
     metadata:
       labels:
-        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.2
         pipelines.kubeflow.org/pipeline-sdk-type: kfp
         pipelines.kubeflow.org/enable_caching: "true"
   - name: train-using-k-nearest-neighbors
@@ -133,7 +133,7 @@ spec:
       - {name: train-using-k-nearest-neighbors-output, path: /tmp/accuracy_knn.txt}
     metadata:
       labels:
-        pipelines.kubeflow.org/kfp_sdk_version: 1.7.2
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.2
         pipelines.kubeflow.org/pipeline-sdk-type: kfp
         pipelines.kubeflow.org/enable_caching: "true"
   arguments:

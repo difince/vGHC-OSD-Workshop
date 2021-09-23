@@ -24,7 +24,7 @@ def iris_classification_pipeline(n_neighbors=2, splitter="random"):
     )
 
     with dsl.Condition(tree.output >= knn.output):
-        c = dsl.ContainerOp(
+        dsl.ContainerOp(
             name='Train Tree',
             image="annajung/iris:latest",
             command=['sh', '-c'],
@@ -32,8 +32,8 @@ def iris_classification_pipeline(n_neighbors=2, splitter="random"):
             file_outputs={'output': '/tmp/tree.pkl'},
         )
 
-    with dsl.Condition(knn.output >= tree.output):
-        c = dsl.ContainerOp(
+    with dsl.Condition(knn.output > tree.output):
+        dsl.ContainerOp(
             name='Train KNN',
             image="annajung/iris:latest",
             command=['sh', '-c'],

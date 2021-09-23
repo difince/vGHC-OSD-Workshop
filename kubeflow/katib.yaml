@@ -2,7 +2,7 @@ apiVersion: kubeflow.org/v1beta1
 kind: Experiment
 metadata:
   name: iris-knn-katib-example
-  namespace: "kubeflow-user-example-com"
+  namespace: kubeflow-user-example-com
 spec:
   algorithm:
     algorithmName: random
@@ -12,17 +12,13 @@ spec:
     collector:
       kind: StdOut
   objective:
-    additionalMetricNames:
-      - Train-accuracy
     goal: 0.99
     metricStrategies:
-      - name: Validation-accuracy
+      - name: accuracy
         value: max
-      - name: Train-accuracy
-        value: max
-    objectiveMetricName: Validation-accuracy
+    objectiveMetricName: accuracy
     type: maximize
-  parallelTrialCount: 3
+  parallelTrialCount: 4
   parameters:
     - feasibleSpace:
         max: "10"
@@ -54,6 +50,6 @@ spec:
                   - build_model
                   - knn
                   - ${trialParameters.n_neighbors}
-                image: docker.io/annajung/iris:latest
+                image: docker.io/annajung/iris
                 name: training-container
             restartPolicy: Never

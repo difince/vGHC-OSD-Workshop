@@ -23,7 +23,7 @@ def build_model(model="", parameter=""):
 
     predictions = classifier.predict(X_test)
     accuracy = accuracy_score(y_test, predictions)
-    print("Accuracy for {}: {}".format(model, accuracy))
+    print("accuracy={}".format(accuracy))
 
     text_file = open("/tmp/accuracy_{}.txt".format(model), "w")
     text_file.write("{}".format(accuracy))
