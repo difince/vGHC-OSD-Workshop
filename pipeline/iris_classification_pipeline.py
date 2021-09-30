@@ -25,7 +25,7 @@ def iris_classification_pipeline(n_neighbors=2, splitter="random"):
 
     with dsl.Condition(tree.output >= knn.output):
         dsl.ContainerOp(
-            name='Train Tree',
+            name='Save Tree model',
             image="annajung/iris:latest",
             command=['sh', '-c'],
             arguments=["python3  iris_classification.py save_final_model tree " + str(splitter)],
@@ -34,7 +34,7 @@ def iris_classification_pipeline(n_neighbors=2, splitter="random"):
 
     with dsl.Condition(knn.output > tree.output):
         dsl.ContainerOp(
-            name='Train KNN',
+            name='Save KNN model',
             image="annajung/iris:latest",
             command=['sh', '-c'],
             arguments=["python3  iris_classification.py save_final_model knn " + str(n_neighbors)],
