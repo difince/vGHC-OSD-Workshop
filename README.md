@@ -7,5 +7,5 @@ To prepare for the workshop, follow the [setup guide](./kubeflow/setup.md) to in
 - Kubeflow (standalone pipeline or full stack)
 - Jupyter Notebook (only if using a standalone pipeline)
 
-See the `dev` branch to get all resources needed for this tutorial! 
+See the `dev` branch to get all the development sources needed for this tutorial! 
 
