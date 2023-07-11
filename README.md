@@ -5,5 +5,7 @@
 To prepare for the workshop, follow the [setup guide](./kubeflow/setup.md) to install 
 - Kubernetes
 - Kubeflow (standalone pipeline or full stack)
-- Jupyter Notebook (only if using standalone pipeline)
+- Jupyter Notebook (only if using a standalone pipeline)
+
+See the `dev` branch to get all resources needed for this tutorial! 
 
